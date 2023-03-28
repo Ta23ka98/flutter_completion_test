@@ -7,4 +7,6 @@ part 'schedule_dao.g.dart';
 class SchedulesDao extends DatabaseAccessor<AppDatabase>
     with _$SchedulesDaoMixin {
   SchedulesDao(AppDatabase db) : super(db);
+
+  //メソッドを書いていく
 }
