@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       onGenerateRoute: AppRouter.generateRoute,
-      home: const CalendarPage(),
+      home: CalendarPage(),
     );
   }
 }
