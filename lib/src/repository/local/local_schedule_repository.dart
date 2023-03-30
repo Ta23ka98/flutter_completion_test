@@ -7,5 +7,31 @@ class LocalScheduleRepository {
   LocalScheduleRepository(AppDatabase appDatabase)
       : schedulesDao = appDatabase.schedulesDao;
 
-  //メソッドを書いていく
+  ///schedule_daoのメソッドを呼び出す
+  Future<List<Schedule>> getAllSchedules() {
+    return schedulesDao.getAllSchedules();
+  }
+
+  Future eventLoad() async {
+    final scheduleList = await schedulesDao.getAllSchedules();
+    final scheduleMap =
+        Map.fromIterables(scheduleList.map((e) => e.start), scheduleList);
+    return scheduleMap;
+  }
+
+  Stream<List<Schedule>> watchAllTodos() {
+    return schedulesDao.watchAllSchedules();
+  }
+
+  Future<void> insertSchedule(SchedulesCompanion schedule) {
+    return schedulesDao.insertSchedule(schedule);
+  }
+
+  Future<void> updateSchedule(Schedule schedule) {
+    return schedulesDao.updateSchedule(schedule);
+  }
+
+  Future<void> deleteScheduleById(int id) {
+    return schedulesDao.deleteScheduleById(id);
+  }
 }
