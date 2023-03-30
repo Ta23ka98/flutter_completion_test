@@ -177,9 +177,12 @@ class CalendarPage extends ConsumerWidget {
                       loading: () =>
                           const Center(child: CircularProgressIndicator()),
                       data: (date) {
-                        return scheduleList;
+                        return sampleMap[date] ?? [];
                       });
-                  return scheduleList;
+                  return sampleMap[date] ?? [];
+
+                  ///用意したscheduleListをうまく表示できない
+                  //return scheduleList[date] ?? [];
                 },
                 onDaySelected: (selectedDay, focusedDay) {
                   // setState(() {
