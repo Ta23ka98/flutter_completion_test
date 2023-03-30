@@ -2,15 +2,16 @@
 
 A new Flutter project.
 
-## Getting Started
+## 進捗状況
+ひとまず
+・それぞれの画面のUIを実装
+・ディレクトリ構成、DriftDBなどを実装
 
-This project is a starting point for a Flutter application.
+機能の実装過程については、
+・予定を追加する機能
+まで実装。
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+予定をうまく表示できず、
+・予定を表示する機能
+・予定を編集する機能
+などがまだ実装できていない。
