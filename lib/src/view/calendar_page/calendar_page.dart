@@ -115,7 +115,6 @@ class CalendarPage extends ConsumerWidget {
   }
 
   final sampleMap = {
-    //DateTime.utc(2016, 10, 3): ['firstEvent', 'secondEvent'],
     DateTime.utc(2023, 3, 5): ['thirdEvent', 'fourthEvent']
   };
   @override
@@ -139,13 +138,6 @@ class CalendarPage extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  // TextButton(
-                  //     style: ButtonStyle(),
-                  //     onPressed: () {},
-                  //     child: const Text(
-                  //       "今日",
-                  //       style: TextStyle(color: Colors.black),
-                  //     )),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.black,
@@ -200,18 +192,12 @@ class CalendarPage extends ConsumerWidget {
                   return scheduleList.when(
                       //エラー時
                       error: (err, _) => [],
-                      //読み込み時
+                      //読み込み中
                       loading: () => [],
+                      //表示可能
                       data: (data) {
-                        //return sampleMap[date] ?? [];
-                        print(date);
-                        print(data);
                         return data[date] ?? [];
                       });
-
-                  //return sampleMap[date] ?? [];
-                  // ///用意したscheduleListをうまく表示できない
-                  // return scheduleList[date] ?? [];
                 },
                 onDaySelected: (selectedDay, focusedDay) {
                   // setState(() {
