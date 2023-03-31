@@ -9,8 +9,7 @@ class AddSchedulePage extends ConsumerWidget {
   AddSchedulePage({Key? key}) : super(key: key);
 
   bool isAllDay = false;
-  final TextEditingController titleController = TextEditingController();
-  final TextEditingController commentController = TextEditingController();
+
   void _showDialog(Widget child, BuildContext context) {
     showCupertinoModalPopup<void>(
         context: context,
@@ -36,6 +35,8 @@ class AddSchedulePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final TextEditingController titleController = TextEditingController();
+    final TextEditingController commentController = TextEditingController();
     final localRepo = ref.read(localRepoProvider);
     final scheduleRepo = localRepo.scheduleRepo;
     return Scaffold(
@@ -58,17 +59,22 @@ class AddSchedulePage extends ConsumerWidget {
             //   ),
             // ),
             onPressed: () async {
-              String titleValue = titleController.text;
-              String commentValue = commentController.text;
-              SchedulesCompanion newSchedule = SchedulesCompanion(
-                title: Value(titleValue),
-                isAllDay: Value(isAllDay),
-                start: Value(start),
-                end: Value(end),
-                comment: Value(commentValue),
-              );
-              await scheduleRepo.insertSchedule(newSchedule);
-              Navigator.pop(context);
+              try {
+                String titleValue = titleController.text;
+                String commentValue = commentController.text;
+                SchedulesCompanion newSchedule = SchedulesCompanion(
+                  title: Value(titleValue),
+                  isAllDay: Value(isAllDay),
+                  start: Value(start),
+                  end: Value(end),
+                  comment: Value(commentValue),
+                );
+                await scheduleRepo.insertSchedule(newSchedule);
+                print(newSchedule);
+              } catch (e) {
+                print(e);
+              }
+              //Navigator.pop(context);
             },
           ),
         ],
