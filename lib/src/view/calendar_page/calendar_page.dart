@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_completion_test/main.dart';
+import 'package:flutter_completion_test/src/service/local/app_database.dart';
 import 'package:flutter_completion_test/src/view/add_schedule_page/add_schedule_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -11,7 +12,8 @@ final scheduleListProvider = StreamProvider((ref) {
   return scheduleRepo.watchAllTodos();
 });
 
-final scheduleMapGetProvider = FutureProvider((ref) {
+final scheduleMapGetProvider =
+    FutureProvider<Map<DateTime, List<Schedule>>>((ref) {
   final localRepo = ref.read(localRepoProvider);
   final scheduleRepo = localRepo.scheduleRepo;
   return scheduleRepo.eventLoad();
@@ -41,6 +43,8 @@ class CalendarPage extends ConsumerWidget {
   DateTime time = DateTime(2016, 5, 10, 22, 35);
   DateTime dateTime = DateTime(2016, 8, 3, 17, 45);
   String? selectedItem = "2021年 08月";
+  DateTime? _selectedDay;
+  DateTime _focusedDay = DateTime.now();
   List<DropdownMenuItem> menuItems = [];
   List<Widget> dialogs = [
     SimpleDialog(
@@ -105,9 +109,13 @@ class CalendarPage extends ConsumerWidget {
     ),
   ];
   List<String> _selectedEvents = [];
+  List<dynamic> _getEventsForDay(DateTime day) {
+    // Implementation example
+    return sampleMap[day] ?? [];
+  }
 
   final sampleMap = {
-    DateTime.utc(2016, 10, 3): ['firstEvent', 'secondEvent'],
+    //DateTime.utc(2016, 10, 3): ['firstEvent', 'secondEvent'],
     DateTime.utc(2023, 3, 5): ['thirdEvent', 'fourthEvent']
   };
   @override
@@ -131,12 +139,24 @@ class CalendarPage extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        "今日",
-                        style: TextStyle(color: Colors.black),
-                      )),
+                  // TextButton(
+                  //     style: ButtonStyle(),
+                  //     onPressed: () {},
+                  //     child: const Text(
+                  //       "今日",
+                  //       style: TextStyle(color: Colors.black),
+                  //     )),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: Colors.black,
+                      backgroundColor: Colors.white,
+                      elevation: 0,
+                      side: const BorderSide(color: Colors.blue),
+                      shape: const StadiumBorder(),
+                    ),
+                    onPressed: () {},
+                    child: const Text('今日'),
+                  ),
                   const SizedBox(
                     width: 30,
                   ),
@@ -151,16 +171,22 @@ class CalendarPage extends ConsumerWidget {
                       ],
                     ),
                     onPressed: () {
-                      _showDialog(
-                          CupertinoDatePicker(
-                            initialDateTime: date,
-                            mode: CupertinoDatePickerMode.date,
-                            use24hFormat: true,
-                            onDateTimeChanged: (DateTime newDate) {
-                              // setState(() => date = newDate);
-                            },
-                          ),
-                          context);
+                      showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime(2020),
+                          lastDate:
+                              DateTime.now().add(const Duration(days: 360)));
+                      // _showDialog(
+                      //     CupertinoDatePicker(
+                      //       initialDateTime: date,
+                      //       mode: CupertinoDatePickerMode.date,
+                      //       use24hFormat: true,
+                      //       onDateTimeChanged: (DateTime newDate) {
+                      //         // setState(() => date = newDate);
+                      //       },
+                      //     ),
+                      //     context);
                     },
                   ),
                   const SizedBox(
@@ -170,31 +196,33 @@ class CalendarPage extends ConsumerWidget {
               ),
               TableCalendar(
                 eventLoader: (date) {
-                  scheduleList.when(
+                  ///Map<Datetime, List<~>>を返す必要がある
+                  return scheduleList.when(
                       //エラー時
-                      error: (err, _) => Text(err.toString()),
+                      error: (err, _) => [],
                       //読み込み時
-                      loading: () =>
-                          const Center(child: CircularProgressIndicator()),
-                      data: (date) {
-                        return sampleMap[date] ?? [];
+                      loading: () => [],
+                      data: (data) {
+                        //return sampleMap[date] ?? [];
+                        print(date);
+                        print(data);
+                        return data[date] ?? [];
                       });
-                  return sampleMap[date] ?? [];
 
-                  ///用意したscheduleListをうまく表示できない
-                  //return scheduleList[date] ?? [];
+                  //return sampleMap[date] ?? [];
+                  // ///用意したscheduleListをうまく表示できない
+                  // return scheduleList[date] ?? [];
                 },
                 onDaySelected: (selectedDay, focusedDay) {
                   // setState(() {
-                  //   _selectedEvents = sampleMap[selectedDay] ?? [];
+                  _selectedEvents = sampleMap[selectedDay] ?? [];
 
-                  // _selectedDay = selectedDay;
-                  // _focusedDay = focusedDay;
+                  _selectedDay = selectedDay;
+                  _focusedDay = focusedDay;
                   // });
                 },
                 headerVisible: false,
-                headerStyle: const HeaderStyle(),
-                focusedDay: DateTime.now(),
+                focusedDay: _focusedDay,
                 firstDay: DateTime.utc(2020, 1, 1),
                 lastDay: DateTime.utc(2030, 1, 1),
               ),
